@@ -21,12 +21,12 @@ mongoose.set('strictQuery',false)
 
 // 1. DBに接続
 mongoose.connect(url, { family: 4 })
-        .then(() => {
-            console.log("connected")
-        })
-        .catch(e => {
-            console.log(e)
-        })
+  .then(() => {
+    console.log('connected')
+  })
+  .catch(e => {
+    console.log(e)
+  })
 
 const noteSchema = new mongoose.Schema({
   content: String,
@@ -42,7 +42,7 @@ const note = new Note({
 })
 
 // 3. ドキュメントをDBに保存 & DBから切断
-note.save().then(result => {
+note.save().then(() => {
   console.log('note saved!')
   mongoose.connection.close()
 })

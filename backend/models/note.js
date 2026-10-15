@@ -3,14 +3,14 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 // ネットワーク問題のローカルな回避策．いずれ削除予定
-const dns = require('node:dns')
-dns.setServers(['1.1.1.1'])
+// const dns = require('node:dns')
+// dns.setServers(['1.1.1.1'])
 
 const url = process.env.MONGODB_URI
 
 // console.log('connecting to', url)
 mongoose.connect(url, { family: 4 })
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB...\n')
   })
   .catch(error => {
