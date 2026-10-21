@@ -13,10 +13,10 @@ logger.info('connecting to', url)
 
 mongoose.connect(url, { family: 4 })
   .then(() => {
-    logger.info('connected to MongoDB...\n')
+    console.log('connected to MongoDB...\n')
   })
   .catch(error => {
-    logger.error('error connecting to MongoDB:', error.message)
+    console.log('error connecting to MongoDB:', error.message)
   })
 
 app.use(express.static('dist'))

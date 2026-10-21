@@ -1,28 +1,15 @@
 /*
  * mongoDB atlas・mongooseを使ったmongoDbエクササイズ
  */
-
+const { MONGODB_URI } = require('./utils/config')
 const mongoose = require('mongoose')
-
-// ネットワーク問題のローカルな回避策．いずれ削除予定
-const dns = require('node:dns')
-dns.setServers(['1.1.1.1'])
-
-if (process.argv.length < 3) {
-  console.log('give password as argument')
-  process.exit(1)
-}
-
-const password = process.argv[2]
-
-const url = `mongodb+srv://8126502_db_user:${password}@cluster0.rhy7fxe.mongodb.net/noteApp?retryWrites=true&w=majority&appName=Cluster0`
 
 mongoose.set('strictQuery',false)
 
 // 1. DBに接続
-mongoose.connect(url, { family: 4 })
+mongoose.connect(MONGODB_URI, { family: 4 })
   .then(() => {
-    console.log('connected')
+    console.log('connected\n')
   })
   .catch(e => {
     console.log(e)
@@ -37,7 +24,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema)
 
 const note = new Note({
-  content: 'hai world',
+  content: 'HTML is easy',
   important: true,
 })
 

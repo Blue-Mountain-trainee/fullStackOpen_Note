@@ -1,8 +1,9 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
+const { info } = require('../utils/logger')
 
 notesRouter.get('/', (_req, res) => {
-  console.log('--route handler called--')
+  info('--route handler called--')
   Note.find({}).then(notes => {
     res.json(notes)
   })
@@ -15,7 +16,7 @@ notesRouter.get('/:id', (req, res, next) => {
       if (!note) {
         return res.status(404).end()
       }
-      console.log('note found:\n', note)
+      info('note found:\n', note)
       res.json(note)
     })
     .catch(e => {next(e)})
@@ -40,7 +41,7 @@ notesRouter.post('/', (req, res, next) => {
 
   note.save()
     .then(savedNote => {
-      console.log('note was saved in DB:\n', savedNote)
+      info('note was saved in DB:\n', savedNote)
       res.json(savedNote)
     })
     .catch(e => next(e))
