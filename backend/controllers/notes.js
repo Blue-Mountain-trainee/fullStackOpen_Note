@@ -2,11 +2,10 @@ const notesRouter = require('express').Router()
 const Note = require('../models/note')
 const { info } = require('../utils/logger')
 
-notesRouter.get('/', (_req, res) => {
+notesRouter.get('/', async (_req, res) => {
   info('--route handler called--')
-  Note.find({}).then(notes => {
-    res.json(notes)
-  })
+  const notes = await Note.find({})
+  res.json(notes)
 })
 
 notesRouter.get('/:id', (req, res, next) => {
@@ -22,8 +21,9 @@ notesRouter.get('/:id', (req, res, next) => {
     .catch(e => {next(e)})
 })
 
-notesRouter.delete('/:id', (req, res, next) => {
+notesRouter.delete('/:id', async (req, res, next) => {
   const id = req.params.id
+
   Note.findByIdAndDelete(id)
     .then(() => {
       res.status(204).end()
@@ -31,7 +31,7 @@ notesRouter.delete('/:id', (req, res, next) => {
     .catch(e => next(e))
 })
 
-notesRouter.post('/', (req, res, next) => {
+notesRouter.post('/',  async (req, res) => {
   const body = req.body
 
   const note = new Note({
@@ -39,12 +39,16 @@ notesRouter.post('/', (req, res, next) => {
     important: body.important || false
   })
 
-  note.save()
-    .then(savedNote => {
-      info('note was saved in DB:\n', savedNote)
-      res.json(savedNote)
-    })
-    .catch(e => next(e))
+  const savedNote = await note.save()  // await の throw は Express が自動で拾える
+  res.status(201).json(savedNote)
+
+  // プロミスチェーンよりエラーハンドラの分記述が少なく済む
+  // note.save()
+  //   .then(savedNote => {
+  //     info('note was saved in DB:\n', savedNote)
+  //     res.status(201).json(savedNote)
+  //   })
+  //   .catch(e => next(e))
 })
 
 notesRouter.put('/:id', (request, response, next) => {
