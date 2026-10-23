@@ -36,6 +36,21 @@ describe('get /api/notes', () => {
   })
 })
 
+describe('get /api/notes/:id', () => {
+  test('a specifc note can be viewed', async () => {
+    // DBから全ノート取得して抽出した先頭のノートのidだけ使って、apiを叩くてテスト
+    const notesAtStart = await helper.notesInDb()
+    const noteToView = notesAtStart[0]
+
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(resultNote.body, noteToView)
+  })
+})
+
 describe('post /api/notes', () => {
   test('a valid note can be added ', async () => {
     const newNote = {
@@ -69,21 +84,6 @@ describe('post /api/notes', () => {
     const notes = await helper.notesInDb()
 
     assert.strictEqual(notes.length, helper.initialNotes.length)
-  })
-})
-
-describe('get /api/notes/:id', () => {
-  test('a specifc note can be viewed', async () => {
-    // DBから全ノート取得して抽出した先頭のノートのidだけ使って、apiを叩くてテスト
-    const notesAtStart = await helper.notesInDb()
-    const noteToView = notesAtStart[0]
-
-    const resultNote = await api
-      .get(`/api/notes/${noteToView.id}`)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-
-    assert.deepStrictEqual(resultNote.body, noteToView)
   })
 })
 
